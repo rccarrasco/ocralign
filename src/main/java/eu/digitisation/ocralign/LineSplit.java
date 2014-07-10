@@ -5,6 +5,7 @@
  */
 package eu.digitisation.ocralign;
 
+import eu.digitisation.image.Bimage;
 import eu.digitisation.input.FileType;
 import eu.digitisation.layout.Page;
 import eu.digitisation.log.Messages;
@@ -52,12 +53,13 @@ public class LineSplit {
      *
      * @return the added darkness for every row (x-value) in the image.
      */
-    private int[] yprojection() {
-        int[] values = new int[getHeight()];
-        for (int y = 0; y < getHeight(); ++y) {
+    private static int[] yprojection(Bimage bim) {
+        int[] values = new int[bim.getHeight()];
+
+        for (int y = 0; y < bim.getHeight(); ++y) {
             int sum = 0;
-            for (int x = 0; x < getWidth(); ++x) {
-                sum += 255 - luminance(x, y);
+            for (int x = 0; x < bim.getWidth(); ++x) {
+                sum += 255 - bim.luminance(x, y);
             }
             values[y] = sum;
         }
@@ -67,22 +69,22 @@ public class LineSplit {
     /**
      * Split image into component lines
      */
-    public void slice() {
-        int[] values = yprojection();
-        ArrayList<Integer> limits = new ArrayList<Integer>();
+    public static void slice(Bimage bim) {
+        int[] values = yprojection(bim);
+        ArrayList<Integer> limits = new ArrayList<>();
         double B = Arrays.average(values);
         //double A = Math.max(Stat.max(values) - B, B - Stat.min(values));
         double sigma = Arrays.std(values);
         int upper = 0;
         boolean inner = false;
-        double[] Y = new double[values.length];
-        double[] Z = new double[values.length]; // normalized values
+       //double[] Y = new double[values.length];
+       //double[] Z = new double[values.length]; // normalized values
 
-        for (int y = 0; y < getHeight(); ++y) {
+        for (int y = 0; y < bim.getHeight(); ++y) {
             double nval = (values[y] - B) / sigma; // normalized value
             //System.out.println(y + " " + nval);
-            Y[y] = y;
-            Z[y] = nval;
+            //Y[y] = y;
+            //Z[y] = nval;
             if (inner) {
                 if (nval < threshold) {
                     limits.add(y);
@@ -95,7 +97,7 @@ public class LineSplit {
                 }
             }
         }
-        addBoxes(limits);
+        addBoxes(bim, limits);
         //new Plot(Y, Z).show(400, 400, 40);
     }
 
@@ -104,21 +106,21 @@ public class LineSplit {
      *
      * @param limits
      */
-    private void addBoxes(List<Integer> limits) {
+    private static void addBoxes(Bimage bim, List<Integer> limits) {
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN};
         for (int n = 0; n + 1 < limits.size(); ++n) {
             int s = n / 2;
             int y = limits.get(n);
             int h = limits.get(++n) - y; // rectangle height
             int x = 10 * (n % 2); // avoid full overlapping 
-            int w = getWidth() - 10 - 2 * x; // rectangle width
+            int w = bim.getWidth() - 10 - 2 * x; // rectangle width
             Polygon poly = new Polygon();
             poly.addPoint(x, y);
             poly.addPoint(x + w, y);
             poly.addPoint(x + w, y + h);
             poly.addPoint(x, y + h);
 
-            add(poly, colors[s % 4], 1);
+            bim.add(poly, colors[s % 4], 1);
         }
     }
 }

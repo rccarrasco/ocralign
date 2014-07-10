@@ -19,46 +19,94 @@ package eu.digitisation.ocralign;
 
 import eu.digitisation.image.Bimage;
 import eu.digitisation.image.Display;
-import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.color.ColorSpace;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
 
 /**
- *
+ * BImage basic transformations
  * @author R.C.C
  */
 public class Transform {
 
-    private static Bimage rotate(Bimage bim, double alpha) {
-        System.out.println(bim.getWidth() + "," + bim.getHeight());
+    /**
+     * Create a scaled image
+     *
+     * @param bim the input image
+     * @param scale the scale factor
+     * @return a scaled image
+     */
+    public static Bimage scale(Bimage bim, double scale) {
+        int w = (int) (scale * bim.getWidth());
+        int h = (int) (scale * bim.getHeight());
+        Bimage scaled = new Bimage(w, h, bim.getType());
+        //int hints = java.awt.Image.SCALE_SMOOTH; //scaling algorithm
+        //Image img = getScaledInstance(w, h, hints);
+        Graphics2D g = scaled.createGraphics();
+        AffineTransform at = new AffineTransform();
+        at.scale(scale, scale);
+        g.drawImage(bim, at, null);
+        g.dispose();
+        return scaled;
+    }
+
+    /**
+     * Create a rotated image
+     *
+     * @param bim the input image
+     * @param alpha the rotation angle (anticlockwise)
+     * @return the rotated image
+     */
+    public static Bimage rotate(Bimage bim, double alpha) {
         double cos = Math.cos(alpha);
         double sin = Math.sin(alpha);
         int w = (int) Math.floor(bim.getWidth() * cos + bim.getHeight() * sin);
         int h = (int) Math.floor(bim.getHeight() * cos + bim.getWidth() * sin);
         Bimage rotated = new Bimage(w, h, bim.getType());
-        System.out.println(rotated.getWidth() + "," + rotated.getHeight());
         Graphics2D g = (Graphics2D) rotated.getGraphics();
-        g.setBackground(Color.WHITE);
+
+        g.setBackground(bim.background());
         g.clearRect(0, 0, w, h);
-        g.translate(bim.getHeight() * sin, 0);
-        g.rotate(alpha);
+        if (alpha < 0) {
+            g.translate(bim.getHeight() * sin, 0);
+        } else {
+            g.translate(0, bim.getWidth() * sin);
+        }
+        g.rotate(-alpha);
         g.drawImage(bim, 0, 0, null);
         g.dispose();
+
         return rotated;
     }
 
-    public static void main(String[] args) throws Exception {
-        String ifname = args[0];
-        String ofname = args[1];
-        File ifile = new File(ifname);
-        File ofile = new File(ofname);
-        Deskew p = new Deskew(ifile);
-        //double alpha = p.skew();
-        //System.out.println("Image rotation="+alpha);
-        //p.slice();
-        Bimage rotated = p.rotate(Math.PI / 6);
-        rotated.write(ofile);
-        System.err.println("Output image in " + ofname);
-        Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
+    /**
+     * Transform image to gray-scale
+     *
+     * @param bim the input image
+     * @return this image as gray-scale image
+     */
+    public static Bimage toGrayScale(BufferedImage bim) {
+        ColorSpace space = ColorSpace.getInstance(ColorSpace.CS_GRAY);
+        ColorConvertOp operation = new ColorConvertOp(space, null);
+        return new Bimage(operation.filter(bim, null));
     }
+
+    /**
+     * Transform image to RGB
+     *
+     * @param bim the input image
+     *
+     * @return this image as RGB image
+     */
+    public static Bimage toRGB(BufferedImage bim) {
+        Bimage output = new Bimage(bim.getWidth(), bim.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = output.createGraphics();
+        g.drawImage(bim, 0, 0, null);
+        g.dispose();
+        return output;
+    }
+
 }

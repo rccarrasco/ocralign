@@ -40,11 +40,11 @@ public class Main {
             plot.write(ofile);
             System.out.println("Output dumped to " + ofile.getAbsolutePath());
             */  
-            Deskew p = new Deskew(imfile);
-            double alpha = p.skew();
+            Bimage bim = new Bimage(imfile);
+            double alpha = Enhancement.skew(bim);
             System.out.println("Image rotation="+alpha);
             //p.slice();
-            Bimage rotated = p.rotate(Math.PI / 4);
+            Bimage rotated = Transform.rotate(bim, Math.PI / 4);
             rotated.write(ofile);
             System.err.println("Output image in " + ofile);
             Display.draw(rotated, rotated.getWidth(), rotated.getHeight());

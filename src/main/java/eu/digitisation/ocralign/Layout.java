@@ -42,7 +42,7 @@ public class Layout {
 
         if (ifile.exists()) {
             try {
-                page = new Bimage(ifile).toRGB();
+                page = Transform.toRGB(new Bimage(ifile));
             } catch (NullPointerException ex) {
                 throw new IOException("Unsupported format");
             }
