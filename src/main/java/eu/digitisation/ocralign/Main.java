@@ -1,11 +1,3 @@
-package eu.digitisation.ocralign;
-
-import eu.digitisation.image.Bimage;
-import eu.digitisation.layout.ComponentType;
-import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-
 /*
  * Copyright (C) 2014 rafa
  *
@@ -23,6 +15,13 @@ import java.io.IOException;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+package eu.digitisation.ocralign;
+
+import eu.digitisation.image.Bimage;
+import eu.digitisation.image.Display;
+import java.io.File;
+import java.io.IOException;
+
 /**
  *
  * @author RCC
@@ -36,9 +35,19 @@ public class Main {
             File imfile = new File(args[0]);
             File gtfile = new File(args[1]);
             File ofile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_marked.$2"));
+            /*
             Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
             plot.write(ofile);
             System.out.println("Output dumped to " + ofile.getAbsolutePath());
+            */  
+            Deskew p = new Deskew(imfile);
+            double alpha = p.skew();
+            System.out.println("Image rotation="+alpha);
+            //p.slice();
+            Bimage rotated = p.rotate(Math.PI / 4);
+            rotated.write(ofile);
+            System.err.println("Output image in " + ofile);
+            Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
         }
     }
 }

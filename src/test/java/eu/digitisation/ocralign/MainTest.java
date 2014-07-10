@@ -23,6 +23,7 @@ public class MainTest {
 
     /**
      * Test of main method, of class Main.
+     * @throws java.net.URISyntaxException
      */
     @Test
     public void testMain() throws URISyntaxException, IOException {
