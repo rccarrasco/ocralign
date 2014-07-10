@@ -18,13 +18,11 @@
 package eu.digitisation.ocralign;
 
 import eu.digitisation.image.Bimage;
-import eu.digitisation.image.Display;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
-import java.io.File;
 
 /**
  * BImage basic transformations
