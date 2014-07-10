@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PcGts xmlns="http://schema.primaresearch.org/PAGE/gts/pagecontent/2010-03-19" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.primaresearch.org/PAGE/gts/pagecontent/2010-03-19 http://schema.primaresearch.org/PAGE/gts/pagecontent/2010-03-19/pagecontent.xsd" pcGtsId="pc-00672944">
+	<Metadata>
+	<Creator>ABBYY FineReader Engine 10.0</Creator>
+	<Created>2012-01-31T09:02:00</Created>
+	<LastChange>2012-03-02T12:05:27</LastChange></Metadata>
+	<Page imageFilename="00672944.tif" imageWidth="1925" imageHeight="2614">
+	<ReadingOrder>
+	<OrderedGroup id="ro357564684568544579089">
+	<RegionRefIndexed regionRef="r1" index="0"/>
+	<RegionRefIndexed regionRef="r5" index="1"/></OrderedGroup></ReadingOrder>
+	<TextRegion id="r1" type="paragraph">
+	<Coords>
+	<Point x="464" y="309"/>
+	<Point x="1642" y="313"/>
+	<Point x="1643" y="2085"/>
+	<Point x="1309" y="2085"/>
+	<Point x="1039" y="2148"/>
+	<Point x="785" y="2153"/>
+	<Point x="444" y="2144"/></Coords>
+	<TextEquiv>
+	<PlainText></PlainText>
+	<Unicode>principal caualleria ala batalla. Pero de modo 
+quedae tapada la via al contrario, que no pu-
+diee ver lo que el otro exercito hazia, ò preten-
+dia hazer:como nos muera Vegecio enel libro
+tercero, de remilitari.titul. 14. diziendo.Singuli
+autem armati indireũ ternos pedes inter ſe oc-
+cupare conſueuerunt, hoc e, in mille paſsibus,
+mille ſexcenti ſexaginta ſex. Pedites ordinantur
+in locis,vt nec acies inter luceat, &amp; ſpatium t ar
+ma traandi:inter ordinẽ autem, &amp; ordinem at
+ergo illatum ſex pedes diare voluerunt: vt habe
+rent ſpacium pugnantes accedendi, atque rece-
+dendi. Vehementius enim cum ſaltu, &amp; curſu tel
+la mittuntur. Quiere dezir. Cada vno delos guer
+readores en la pelea tiene de coumbre occupar
+tres pies entre , conuiene à ſaber, en mil paos,
+mil y ſeyſcientos y ſeenta y ſeys. Los de apie ſe
+ordenan en ſus lugares,para que el exercito no ſe
+deſcubra por entre ellos, y de manera que ten-
+gan lugar,y eſpacio para poder aprouecharſe, y
+traar ſus armas, entre el orden de adelante, y
+el que queda atras quieron que huuiee dian
+cia de ſeys pies, para que los que peleaen tu-
+uieen eſpacio de acercarſe, y de retirarſe, por-
+que las armas arrojadizas con mayor fuerça ſe ti-
+ran con ſalto, y corrida.</Unicode></TextEquiv></TextRegion>
+	<TextRegion id="r2" type="header">
+	<Coords>
+	<Point x="689" y="241"/>
+	<Point x="1123" y="241"/>
+	<Point x="1387" y="240"/>
+	<Point x="1384" y="310"/>
+	<Point x="691" y="300"/></Coords>
+	<TextEquiv>
+	<PlainText></PlainText>
+	<Unicode>Libro dela inuencion liberal</Unicode></TextEquiv></TextRegion>
+	<TextRegion id="r5" type="catch-word">
+	<Coords>
+	<Point x="1414" y="2245"/>
+	<Point x="1611" y="2238"/>
+	<Point x="1608" y="2159"/>
+	<Point x="1425" y="2158"/>
+	<Point x="1410" y="2159"/></Coords>
+	<TextEquiv>
+	<PlainText></PlainText>
+	<Unicode>Capitu.</Unicode></TextEquiv></TextRegion>
+	<TextRegion id="r6" type="marginalia">
+	<Coords>
+	<Point x="295" y="489"/>
+	<Point x="295" y="547"/>
+	<Point x="456" y="547"/>
+	<Point x="456" y="489"/></Coords>
+	<TextEquiv>
+	<PlainText></PlainText>
+	<Unicode>Vegecio.</Unicode></TextEquiv></TextRegion></Page></PcGts>
