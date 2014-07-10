@@ -20,10 +20,7 @@ package eu.digitisation.ocralign;
 import eu.digitisation.image.Bimage;
 import eu.digitisation.image.Display;
 import eu.digitisation.math.Arrays;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import javax.media.jai.JAI;
 
 /**
  *
@@ -36,6 +33,7 @@ public class Enhancement { //extends Bimage {
 
     /**
      * For debugging: print vertical projection of gray levels
+     * @param bim the input image
      */
     public static void stats(Bimage bim) {
         for (int y = 0; y < bim.getHeight(); ++y) {
@@ -122,11 +120,11 @@ public class Enhancement { //extends Bimage {
         return findSkew(bim, -0.1, 0.1, 0.001);
     }
 
-    public double skew2(Bimage bim) {
+    public static double skew2(Bimage bim) {
         double mu = 0;
         double skew = 0;
 
-        for (double zeta = -3; zeta < 3; zeta += 0.1) {
+        for (double zeta = -3; zeta < 3; zeta += 0.01) {
             double alpha = Math.PI * zeta / 180;
             int[] pros = projection(bim, alpha);
             //new Histogram("zeta=" + String.format("%.1f", zeta), pros).show(400,400,40);

@@ -36,13 +36,13 @@ public class Main {
             File gtfile = new File(args[1]);
             File ofile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_marked.$2"));
             /*
-            Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
-            plot.write(ofile);
-            System.out.println("Output dumped to " + ofile.getAbsolutePath());
-            */  
+             Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
+             plot.write(ofile);
+             System.out.println("Output dumped to " + ofile.getAbsolutePath());
+             */
             Bimage bim = new Bimage(imfile);
             double alpha = Enhancement.skew(bim);
-            System.out.println("Image rotation="+alpha);
+            System.out.println("Image rotation = " + (180 * alpha / Math.PI) + " degrees");
             //p.slice();
             Bimage rotated = Transform.rotate(bim, Math.PI / 4);
             rotated.write(ofile);

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -24,6 +23,7 @@ public class MainTest {
     /**
      * Test of main method, of class Main.
      * @throws java.net.URISyntaxException
+     * @throws java.io.IOException
      */
     @Test
     public void testMain() throws URISyntaxException, IOException {
