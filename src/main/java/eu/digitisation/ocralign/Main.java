@@ -35,7 +35,7 @@ public class Main {
             File imfile = new File(args[0]);
             double alpha = Math.PI * Double.parseDouble(args[1]) / 180;
             Bimage bim = new Bimage(imfile);
-            int[] p = Enhancement.projection(null, alpha);
+            int[] p = Enhancement.projection(bim, alpha);
             for (int n = 0; n < p.length; ++n) {
                 System.out.println(n + " " + p[n]);
             }
