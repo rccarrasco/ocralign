@@ -74,9 +74,7 @@ public class Enhancement { //extends Bimage {
      * not the standard but the following: x' = x * cos(alpha) + y * sin(alpha)
      * y' = -x * sin(alpha) + y * cos(alpha)
      */
-    private static int[] projection(Bimage bim, double alpha) {
-//        int shift = (int) Math.round(slope * bim.getWidth());
-
+    public static int[] projection(Bimage bim, double alpha) {
         // highest point is either (0,0) or upper-right corner (width, 0)
         int ymin = (alpha < 0)
                 ? 0

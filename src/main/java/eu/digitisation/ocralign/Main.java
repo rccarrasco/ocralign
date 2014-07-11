@@ -30,26 +30,32 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
-            System.out.println("Usage: image_file groundtruth_file");
+            System.out.println("Usage: image_file angle");
         } else {
             File imfile = new File(args[0]);
-            File gtfile = new File(args[1]);
-            File ofile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_marked.$2"));
+            double alpha = Double.parseDouble(args[1]);
+            Bimage bim = new Bimage(imfile);
+            int[] p = Enhancement.projection(null, alpha);
+            for (int n = 0; n < p.length; ++n) {
+                System.out.println(n + " " + p[n]);
+            }
             /*
+             File gtfile = new File(args[1]);
+             File ofile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_marked.$2"));
              Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
              plot.write(ofile);
              System.out.println("Output dumped to " + ofile.getAbsolutePath());
              */
-            Bimage bim = new Bimage(imfile);
+
+            alpha = 180 * Enhancement.skew(bim) / Math.PI;
             double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
-            double alpha = 180 * Enhancement.skew(bim) / Math.PI;
             System.err.println("Image rotation = " + alpha + " degrees");
             System.err.println("Image rotation = " + alpha2 + " degrees");
             //p.slice();
-            Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
-            rotated.write(ofile);
-            System.err.println("Output image in " + ofile);
-            Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
+            //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
+            //rotated.write(ofile);
+            //System.err.println("Output image in " + ofile);
+            //Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
         }
     }
 }
