@@ -89,7 +89,6 @@ public class Enhancement { //extends Bimage {
         for (int y = 0; y < bim.getHeight(); ++y) {
             for (int x = 0; x < bim.getWidth(); ++x) {
                 int pos = (int) Math.round(-Math.sin(alpha) * x + Math.cos(alpha) * y);
-                //System.out.println(pos);
                 values[pos - ymin] += (255 - bim.luminance(x, y));
             }
         }
@@ -138,7 +137,7 @@ public class Enhancement { //extends Bimage {
         double mu = 0;
         double skew = 0;
 
-        for (double zeta = -89; zeta < 89; zeta += 0.5) {
+        for (double zeta = -5; zeta < 5; zeta += 0.1) {
             double alpha = Math.PI * zeta / 180;
             int[] pros = projection(bim, alpha);
             //new Histogram("zeta=" + String.format("%.1f", zeta), pros).show(400,400,40);

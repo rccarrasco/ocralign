@@ -29,17 +29,17 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
+        if (args.length == 0) {
             System.out.println("Usage: image_file angle");
         } else {
             File imfile = new File(args[0]);
-            double alpha = Math.PI * Double.parseDouble(args[1]) / 180;
+            //double alpha = Math.PI * Double.parseDouble(args[1]) / 180;
             Bimage bim = new Bimage(imfile);
+            /*
             int[] p = Enhancement.projection(bim, alpha);
             for (int n = 0; n < p.length; ++n) {
                 System.out.println(n + " " + p[n]);
             }
-            /*
              File gtfile = new File(args[1]);
              File ofile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_marked.$2"));
              Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
@@ -47,10 +47,10 @@ public class Main {
              System.out.println("Output dumped to " + ofile.getAbsolutePath());
              */
 
-            //alpha = 180 * Enhancement.skew(bim) / Math.PI;
-            //double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
-            //System.err.println("Image rotation = " + alpha + " degrees");
-            //System.err.println("Image rotation = " + alpha2 + " degrees");
+            double alpha = 180 * Enhancement.skew(bim) / Math.PI;
+            double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
+            System.err.println("Image rotation = " + alpha + " degrees");
+            System.err.println("Image rotation = " + alpha2 + " degrees");
             //p.slice();
             //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
             //rotated.write(ofile);
