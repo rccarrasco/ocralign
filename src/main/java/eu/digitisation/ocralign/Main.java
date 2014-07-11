@@ -17,7 +17,7 @@
  */
 package eu.digitisation.ocralign;
 
-import eu.digitisation.image.Bimage;
+import eu.digitisation.images.Bimage;
 import eu.digitisation.image.Display;
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +41,8 @@ public class Main {
              System.out.println("Output dumped to " + ofile.getAbsolutePath());
              */
             Bimage bim = new Bimage(imfile);
-            double alpha = Enhancement.skew(bim);
-            System.out.println("Image rotation = " + (180 * alpha / Math.PI) + " degrees");
+            double alpha = Enhancement.skew2(bim);
+            System.err.println("Image rotation = " + (180 * alpha / Math.PI) + " degrees");
             //p.slice();
             Bimage rotated = Transform.rotate(bim, Math.PI / 4);
             rotated.write(ofile);

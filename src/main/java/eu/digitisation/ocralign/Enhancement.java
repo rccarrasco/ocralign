@@ -17,8 +17,8 @@
  */
 package eu.digitisation.ocralign;
 
-import eu.digitisation.image.Bimage;
-import eu.digitisation.image.Display;
+import eu.digitisation.images.Bimage;
+import eu.digitisation.images.Display;
 import eu.digitisation.math.Arrays;
 import java.io.File;
 
@@ -114,6 +114,7 @@ public class Enhancement { //extends Bimage {
 
     /**
      *
+     * @param bim the input image
      * @return the skew angle of this page
      */
     public static double skew(Bimage bim) {
@@ -131,8 +132,8 @@ public class Enhancement { //extends Bimage {
             // System.out.println(pros.length);
             double s = Arrays.std(pros);
             System.out.println(String.format("%.2f", zeta)
-                    + " " + Math.round(bim.getWidth() * Math.tan(alpha))
-                    + " " + String.format("%.1f", s));
+                    //+ " " + Math.round(bim.getWidth() * Math.tan(alpha))
+                    + " " + String.format("%.2f", s));
             if (s > mu) {
                 mu = s;
                 skew = alpha;

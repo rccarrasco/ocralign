@@ -5,7 +5,7 @@
  */
 package eu.digitisation.ocralign;
 
-import eu.digitisation.image.Bimage;
+import eu.digitisation.images.Bimage;
 import eu.digitisation.input.FileType;
 import eu.digitisation.layout.Page;
 import eu.digitisation.log.Messages;

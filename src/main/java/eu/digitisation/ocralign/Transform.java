@@ -17,7 +17,7 @@
  */
 package eu.digitisation.ocralign;
 
-import eu.digitisation.image.Bimage;
+import eu.digitisation.images.Bimage;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
