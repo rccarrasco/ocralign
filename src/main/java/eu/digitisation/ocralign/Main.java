@@ -46,11 +46,11 @@ public class Main {
              plot.write(ofile);
              System.out.println("Output dumped to " + ofile.getAbsolutePath());
              */
-
             double alpha = 180 * Enhancement.skew(bim) / Math.PI;
             double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
             System.err.println("Image rotation = " + alpha + " degrees");
             System.err.println("Image rotation = " + alpha2 + " degrees");
+
             //p.slice();
             //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
             //rotated.write(ofile);
