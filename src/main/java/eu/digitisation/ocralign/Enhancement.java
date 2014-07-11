@@ -33,6 +33,7 @@ public class Enhancement { //extends Bimage {
 
     /**
      * For debugging: print vertical projection of gray levels
+     *
      * @param bim the input image
      */
     public static void stats(Bimage bim) {
@@ -64,20 +65,33 @@ public class Enhancement { //extends Bimage {
 
     /**
      *
-     * @param alpha the line angle (alpha>0 if growing, alpha<0 if declining)
+     * @param alpha the line angle (alpha > 0 if growing, alpha < 0 if
+     * declining)
      *
-     * @return the projection of darkness for every line y' = y + x * tan(alpha)
+     * @return the horizontal projection of darkness when points (x,y) are
+     * rotated to (x',y') Since y-values are indeed negative (x=0, y=0
+     * represents the upper-left corner in the picture), the transformation is
+     * not the standard but the following: x' = x * cos(alpha) + y * sin(alpha)
+     * y' = -x * sin(alpha) + y * cos(alpha)
      */
     private static int[] projection(Bimage bim, double alpha) {
-        double slope = Math.tan(alpha);
-        int shift = (int) Math.round(slope * bim.getWidth());
-        int ymin = Math.min(0, shift);
-        int ymax = Math.max(bim.getHeight(), bim.getHeight() + shift);
-        //System.out.println(ymin+" "+ymax);
-        int[] values = new int[ymax - ymin];
+//        int shift = (int) Math.round(slope * bim.getWidth());
+
+        // highest point is either (0,0) or upper-right corner (width, 0)
+        int ymin = (alpha < 0)
+                ? 0
+                : (int) Math.round(-Math.sin(alpha) * bim.getWidth());
+        // lowest point eihter (0, height) or (width, height)
+        int ymax = (alpha < 0) 
+                ? (int) Math.round(-Math.sin(alpha) * bim.getWidth() + Math.cos(alpha) * bim.getHeight())
+                : (int) Math.round(Math.cos(alpha) * bim.getHeight());
+        
+        //System.out.println(ymin + " " + ymax);
+        int[] values = new int[ymax - ymin + 1];
         for (int y = 0; y < bim.getHeight(); ++y) {
             for (int x = 0; x < bim.getWidth(); ++x) {
-                int pos = (int) Math.round(y + slope * x);
+                int pos = (int) Math.round(-Math.sin(alpha) * x + Math.cos(alpha) * y);
+                //System.out.println(pos);
                 values[pos - ymin] += (255 - bim.luminance(x, y));
             }
         }
@@ -98,7 +112,8 @@ public class Enhancement { //extends Bimage {
     /**
      * Find maximum within [left, right] with precision epsilon
      */
-    private static double findSkew(Bimage bim, double left, double right, double epsilon) {
+    private static double findSkew(Bimage bim, double left,
+            double right, double epsilon) {
         while (right > left && right - left > epsilon) {
             double leftThird = (2 * left + right) / 3;
             double rightThird = (left + 2 * right) / 3;
@@ -118,14 +133,14 @@ public class Enhancement { //extends Bimage {
      * @return the skew angle of this page
      */
     public static double skew(Bimage bim) {
-        return findSkew(bim, -0.1, 0.1, 0.001);
+        return findSkew(bim, -0.1, 0.1, 0.01);
     }
 
     public static double skew2(Bimage bim) {
         double mu = 0;
         double skew = 0;
 
-        for (double zeta = -3; zeta < 3; zeta += 0.01) {
+        for (double zeta = -89; zeta < 89; zeta += 0.5) {
             double alpha = Math.PI * zeta / 180;
             int[] pros = projection(bim, alpha);
             //new Histogram("zeta=" + String.format("%.1f", zeta), pros).show(400,400,40);

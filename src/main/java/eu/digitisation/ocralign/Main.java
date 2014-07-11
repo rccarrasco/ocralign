@@ -41,10 +41,12 @@ public class Main {
              System.out.println("Output dumped to " + ofile.getAbsolutePath());
              */
             Bimage bim = new Bimage(imfile);
-            double alpha = Enhancement.skew2(bim);
-            System.err.println("Image rotation = " + (180 * alpha / Math.PI) + " degrees");
+            double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
+            double alpha = 180 * Enhancement.skew(bim) / Math.PI;
+            System.err.println("Image rotation = " + alpha + " degrees");
+            System.err.println("Image rotation = " + alpha2 + " degrees");
             //p.slice();
-            Bimage rotated = Transform.rotate(bim, Math.PI / 4);
+            Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
             rotated.write(ofile);
             System.err.println("Output image in " + ofile);
             Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
