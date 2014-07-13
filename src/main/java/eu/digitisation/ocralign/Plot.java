@@ -87,12 +87,23 @@ public class Plot {
         double ylow = Arrays.min(Y);
         double yrange = yhigh - ylow;
 
-        // draw bars
-        g.setColor(Color.RED);
-        for (int n = 0; n < X.length; ++n) {
+        // draw lines
+        g.setColor(Color.BLUE);
+        int xprev = (int) Math.round((width * (X[0] - xlow)) / xrange);
+        int yprev = (int) Math.round((height * (Y[0] - ylow)) / yrange);
+        g.fillRect(margin + xprev - 1, height + margin - yprev, 3, 3);
+        for (int n = 1; n < X.length; ++n) {
             int xpos = (int) Math.round((width * (X[n] - xlow)) / xrange);
             int ypos = (int) Math.round((height * (Y[n] - ylow)) / yrange);
-            g.fillRect(margin + xpos - 1, height + margin - ypos, 3, ypos);
+            g.setColor(Color.BLUE);
+            //  g.fillRect(margin + xpos - 1, height + margin - ypos, 3, ypos);
+            //  g.fillRect(margin + xpos - 1, height + margin - ypos, 3, ypos);
+            g.setColor(Color.RED);
+            g.drawLine(margin + xprev, height + margin - yprev,
+                    margin + xpos, height + margin - ypos);
+
+            xprev = xpos;
+            yprev = ypos;
         }
 
         // draw title
