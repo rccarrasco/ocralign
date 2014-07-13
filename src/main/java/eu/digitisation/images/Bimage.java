@@ -265,8 +265,8 @@ public class Bimage extends BufferedImage {
     }
 
     /**
-     * The luminance (weighted average, see
-     * http://en.wikipedia.org/wiki/Luminance_(colorimetry)) of a pixel
+     * The realtive luminance (weighted average, see
+     * http://en.wikipedia.org/wiki/Luminance_(relative)) of a pixel
      *
      * @param x the x coordinate
      * @param y the y coordinate
