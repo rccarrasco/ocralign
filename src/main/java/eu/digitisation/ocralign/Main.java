@@ -17,8 +17,9 @@
  */
 package eu.digitisation.ocralign;
 
-import eu.digitisation.images.Bimage;
 import eu.digitisation.image.Display;
+import eu.digitisation.images.Bimage;
+import eu.digitisation.math.Histogram;
 import java.io.File;
 import java.io.IOException;
 
@@ -36,10 +37,10 @@ public class Main {
             //double alpha = Math.PI * Double.parseDouble(args[1]) / 180;
             Bimage bim = new Bimage(imfile);
             /*
-            int[] p = Enhancement.projection(bim, alpha);
-            for (int n = 0; n < p.length; ++n) {
-                System.out.println(n + " " + p[n]);
-            }
+             int[] p = Enhancement.projection(bim, alpha);
+             for (int n = 0; n < p.length; ++n) {
+             System.out.println(n + " " + p[n]);
+             }
              File gtfile = new File(args[1]);
              File ofile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_marked.$2"));
              Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
@@ -47,11 +48,18 @@ public class Main {
              System.out.println("Output dumped to " + ofile.getAbsolutePath());
              */
             double alpha = 180 * Enhancement.skew(bim) / Math.PI;
-            double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
+            //double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
             System.err.println("Image rotation = " + alpha + " degrees");
-            System.err.println("Image rotation = " + alpha2 + " degrees");
+            //System.err.println("Image rotation = " + alpha2 + " degrees");
+            double[] Y = LineSplit.smoothProjection(bim);
+            double[] X = new double[Y.length];
 
-            //p.slice();
+            for (int n = 0; n < Y.length; ++n) {
+                X[n] = n;
+            }
+            
+            Plot plot = new Plot("H-projection", X, Y);
+            plot.show(800, 400, 10);
             //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
             //rotated.write(ofile);
             //System.err.println("Output image in " + ofile);

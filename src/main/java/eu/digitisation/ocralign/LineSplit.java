@@ -53,7 +53,7 @@ public class LineSplit {
      *
      * @return the added darkness for every row (x-value) in the image.
      */
-    private static int[] yprojection(Bimage bim) {
+    private static int[] hprojection(Bimage bim) {
         int[] values = new int[bim.getHeight()];
 
         for (int y = 0; y < bim.getHeight(); ++y) {
@@ -67,18 +67,39 @@ public class LineSplit {
     }
 
     /**
+     * Horizontal projection of darkness
+     *
+     * @param bim th input image
+     * @return the added darkness for every row (x-value) in the image
+     * normalised to the average value and standard deviation
+     */
+    public static double[] smoothProjection(Bimage bim) {
+        int[] values = hprojection(bim);
+        double mu = Arrays.average(values);
+        double sigma = Arrays.std(values);
+        double[] smooth = new double[values.length];
+
+        for (int n = 0; n < values.length; ++n) {
+            smooth[n] = (values[n] - mu) / sigma;
+        }
+
+        return smooth;
+    }
+
+    /**
      * Split image into component lines
+     * @param bim the input image
      */
     public static void slice(Bimage bim) {
-        int[] values = yprojection(bim);
+        int[] values = hprojection(bim);
         ArrayList<Integer> limits = new ArrayList<>();
         double B = Arrays.average(values);
         //double A = Math.max(Stat.max(values) - B, B - Stat.min(values));
         double sigma = Arrays.std(values);
         int upper = 0;
         boolean inner = false;
-       //double[] Y = new double[values.length];
-       //double[] Z = new double[values.length]; // normalized values
+        //double[] Y = new double[values.length];
+        //double[] Z = new double[values.length]; // normalized values
 
         for (int y = 0; y < bim.getHeight(); ++y) {
             double nval = (values[y] - B) / sigma; // normalized value
