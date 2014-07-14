@@ -22,9 +22,11 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import javax.media.jai.JAI;
 
@@ -33,7 +35,7 @@ import javax.media.jai.JAI;
  *
  * @author R.C.C.
  */
-public class Bimage extends BufferedImage {
+public class Bimage extends BufferedImage implements Iterable<Point> {
 
     static int defaultImageType = BufferedImage.TYPE_INT_RGB;
 
@@ -265,7 +267,7 @@ public class Bimage extends BufferedImage {
     }
 
     /**
-     * The realtive luminance (weighted average, see
+     * The relative luminance (weighted average, see
      * http://en.wikipedia.org/wiki/Luminance_(relative)) of a pixel
      *
      * @param x the x coordinate
@@ -277,6 +279,46 @@ public class Bimage extends BufferedImage {
         return (int) (0.2126 * c.getRed()
                 + 0.7152 * c.getGreen()
                 + 0.0722 * c.getBlue());
+    }
+
+    /**
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     *
+     * @return the color of pixel (x, y)
+     */
+    public Color color(int x, int y) {
+        return new Color(getRGB(x, y));
+    }
+
+    /**
+     *
+     * @return An iterator over the points in the image
+     */
+    @Override
+    public Iterator<Point> iterator() {
+        Iterator<Point> it = new Iterator<Point>() {
+            int x = 0;
+            int y = 0;
+
+            @Override
+            public boolean hasNext() {
+                return x + 1 < getWidth() || y + 1 < getHeight();
+            }
+
+            @Override
+            public Point next() {
+                if (++x == getWidth()) {  // end of row reached
+                    x = 0;
+                    ++y;
+                }
+                return new Point(x, y);
+            }
+
+        };
+
+        return it;
     }
 
 }

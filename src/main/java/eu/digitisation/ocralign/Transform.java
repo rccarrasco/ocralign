@@ -25,7 +25,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 
 /**
- * BImage basic transformations
+ * Bimage basic transformations
  * @author R.C.C
  */
 public class Transform {

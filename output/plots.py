@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
-def plot(name, source, xlab, ylab):
+def plot(num, name, xlab, ylab):
+    fig = plt.figure(num)
     ifile = open(name + '.txt')
     X = []
     Y = []
@@ -12,9 +13,10 @@ def plot(name, source, xlab, ylab):
     plt.xlabel(xlab)
     plt.ylabel(ylab)
     plt.plot(X, Y)
-    plt.savefig('skew.png')
-    plt.show()
+    plt.savefig(name + '.png')
+    fig.show()
 
 
-plot('skew', 'angle (degrees)', 'sharpness')
-plot('lines', 'height', 'darkness')
+plot(1, 'skew', 'angle (degrees)', 'sharpness')
+plot(2, 'lines', 'height', 'darkness')
+raw_input()

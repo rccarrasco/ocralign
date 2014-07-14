@@ -56,10 +56,13 @@ public class Main {
 
             for (int n = 0; n < Y.length; ++n) {
                 X[n] = n;
+		System.out.println(n + " " + Y[n]);
             }
             
-            Plot plot = new Plot("H-projection", X, Y);
-            plot.show(800, 400, 10);
+            Binarization.histogram(bim);
+            
+            Plot hplot = new Plot("H-projection", X, Y);
+            hplot.show(800, 400, 10);
             //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
             //rotated.write(ofile);
             //System.err.println("Output image in " + ofile);

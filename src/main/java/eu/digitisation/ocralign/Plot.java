@@ -19,12 +19,13 @@ package eu.digitisation.ocralign;
 
 import eu.digitisation.images.Display;
 import eu.digitisation.math.Arrays;
+import eu.digitisation.math.Counter;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
- * Creates toy histograms
+ * Creates toy plots
  *
  * @author R.C.C.
  */
@@ -46,6 +47,21 @@ public class Plot {
         this.title = title;
         this.X = X;
         this.Y = Y;
+    }
+    
+    
+    public <T extends Comparable<T>> Plot(String title, Counter<T> counter) {
+        int size = counter.size();
+        int n = 0;
+        this.title = title;
+        X = new double[size];
+        Y = new double[size];
+        
+        for(T key: counter.keySet()) {
+            X[n] = n;
+            Y[n] = counter.value(key);
+            ++n;
+        }
     }
 
     /**
