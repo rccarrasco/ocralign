@@ -22,6 +22,7 @@ import eu.digitisation.images.Bimage;
 import eu.digitisation.math.Counter;
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Collections;
 
 /**
  *
@@ -30,15 +31,26 @@ import java.awt.Point;
 public class Binarization {
 
     public static void histogram(Bimage bim) {
-        Counter<Integer> counter = new Counter();
+        Counter<Integer> counter = new Counter<>();
         Point box = new Point(bim.getWidth(), bim.getHeight());
         for (Point p : bim) {
             //System.out.println(p + " " + box);
             Color c = bim.color(p.x, p.y);
-            int average = (c.getRed() + c.getGreen() + c.getBlue())/3;
+            int average = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
             counter.inc(c.getRed());
         }
-        Plot plot = new Plot("Luminiscence", counter);
+        int size = 1 + Collections.max(counter.keySet());
+        double[] X = new double[size];
+        double[] Y = new double[size];
+
+        for (int n = 0; n < size; ++n) {
+            if (counter.value(n) > 0) {
+                System.err.println(n + " " + Math.log(counter.value(n)));
+            }
+            X[n] = n;
+            Y[n] = Math.log(counter.value(n));
+        }
+        Plot plot = new Plot("Luminiscence", X, Y);
         plot.show(600, 400, 60);
     }
 
