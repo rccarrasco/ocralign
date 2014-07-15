@@ -17,17 +17,16 @@
  */
 package eu.digitisation.ocralign;
 
-import eu.digitisation.images.Bimage;
 import eu.digitisation.images.Display;
-import eu.digitisation.log.Messages;
+import eu.digitisation.images.Format;
 import eu.digitisation.math.Arrays;
 import eu.digitisation.math.Counter;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.media.jai.JAI;
 
 /**
  * Creates toy plots
@@ -37,11 +36,10 @@ import java.util.logging.Logger;
 public class Plot {
 
     private static final long serialVersionUID = 1L;
+
     String title;
     double[] X;
     double[] Y;
-
-    Bimage bim;
 
     /**
      * Create plot.
@@ -71,6 +69,15 @@ public class Plot {
     }
 
     /**
+     * Set the plot title
+     *
+     * @param title the title for this plot
+     */
+    public void title(String title) {
+        this.title = title;
+    }
+
+    /**
      * Integer exponentiation (for axis)
      *
      * @param base base
@@ -89,7 +96,7 @@ public class Plot {
         return result;
     }
 
-    private BufferedImage create(int width, int height, int margin) {
+    private BufferedImage toBufferedImage(int width, int height, int margin) {
         BufferedImage img
                 = new BufferedImage(width + 2 * margin,
                         height + 2 * margin,
@@ -161,15 +168,14 @@ public class Plot {
      * @param margin display margins (in pixels)
      */
     public void show(int width, int height, int margin) {
-        bim = new Bimage(create(width, height, margin));
-        Display.draw(bim);
+        Display.draw(toBufferedImage(width, height, margin));
     }
 
-    public void save(java.io.File file) {
-        try {
-            bim.write(file);
-        } catch (IOException ex) {
-           Messages.severe(ex.getMessage());
-        }
+    public void save(File file, int width, int height, int margin) 
+            throws IOException {
+        BufferedImage img = toBufferedImage(width, height, margin);
+        Format format = Format.valueOf(file);
+        JAI.create("filestore", img,
+                file.getCanonicalPath(), format.toString());
     }
 }
