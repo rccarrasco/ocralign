@@ -31,25 +31,36 @@ import java.util.Collections;
 public class Binarization {
 
     public static void histogram(Bimage bim) {
+        int total = 0;
+        int dark = 0;
         Counter<Integer> counter = new Counter<>();
         Point box = new Point(bim.getWidth(), bim.getHeight());
         for (Point p : bim) {
             //System.out.println(p + " " + box);
             Color c = bim.color(p.x, p.y);
             int average = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
-            counter.inc(c.getRed());
+            counter.inc(average);
+            ++total;
+            if (average < 150) {
+                ++dark;
+            }
         }
+        System.out.println("dark=" + (100.0 * dark) / total);
+
         int size = 1 + Collections.max(counter.keySet());
         double[] X = new double[size];
         double[] Y = new double[size];
 
         for (int n = 0; n < size; ++n) {
-            if (counter.value(n) > 0) {
-                System.err.println(n + " " + Math.log(counter.value(n)));
-            }
             X[n] = n;
-            Y[n] = Math.log(counter.value(n));
+            if (counter.value(n) > 0) {
+                //System.err.println(n + " " + Math.log(counter.value(n)));
+                Y[n] = counter.value(n);//Math.log(counter.value(n));
+            } else {
+                Y[n] = 0;
+            }
         }
+
         Plot plot = new Plot("Luminiscence", X, Y);
         plot.show(600, 400, 60);
     }

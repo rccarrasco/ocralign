@@ -65,6 +65,7 @@ public class Enhancement { //extends Bimage {
 
     /**
      *
+     * @param bim the input image
      * @param alpha the line angle (alpha > 0 if growing, alpha < 0 if
      * declining)
      *

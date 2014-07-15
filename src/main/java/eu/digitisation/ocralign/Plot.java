@@ -17,12 +17,17 @@
  */
 package eu.digitisation.ocralign;
 
+import eu.digitisation.images.Bimage;
 import eu.digitisation.images.Display;
+import eu.digitisation.log.Messages;
 import eu.digitisation.math.Arrays;
 import eu.digitisation.math.Counter;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Creates toy plots
@@ -36,6 +41,8 @@ public class Plot {
     double[] X;
     double[] Y;
 
+    Bimage bim;
+
     /**
      * Create plot.
      *
@@ -48,16 +55,15 @@ public class Plot {
         this.X = X;
         this.Y = Y;
     }
-    
-    
+
     public <T extends Comparable<T>> Plot(String title, Counter<T> counter) {
         int size = counter.size();
         int n = 0;
         this.title = title;
         X = new double[size];
         Y = new double[size];
-        
-        for(T key: counter.keySet()) {
+
+        for (T key : counter.keySet()) {
             X[n] = n;
             Y[n] = counter.value(key);
             ++n;
@@ -83,19 +89,12 @@ public class Plot {
         return result;
     }
 
-    /**
-     * Display histogram on screen
-     *
-     * @param width display width (in pixels)
-     * @param height display height (in pixels)
-     * @param margin display margins (in pixels)
-     */
-    public void show(int width, int height, int margin) {
-        BufferedImage bim
+    private BufferedImage create(int width, int height, int margin) {
+        BufferedImage img
                 = new BufferedImage(width + 2 * margin,
                         height + 2 * margin,
                         BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = bim.createGraphics();
+        Graphics2D g = img.createGraphics();
         double xhigh = Arrays.max(X);
         double xlow = Arrays.min(X);
         double xrange = xhigh - xlow;
@@ -132,7 +131,7 @@ public class Plot {
         g.setColor(Color.BLUE);
         g.drawRect(margin, margin, width, height);
 
-        // draw Y-tics
+        // draw Y-ticks
         int e = (int) Math.ceil(Math.log(yrange) / Math.log(10)) - 1;
         int ystep = (e > 0) ? pow(10, e) : 1;
         for (int y = (int) Math.round(ylow - ylow % ystep); y <= yhigh; y += ystep) {
@@ -140,7 +139,7 @@ public class Plot {
             g.drawString(String.valueOf(y) + "-", 0, height + margin - ypos);
         }
 
-        // draw X-tics
+        // draw X-ticks
         e = (int) Math.ceil(Math.log(xrange) / Math.log(10)) - 1;
         int xstep = (e > 0) ? pow(10, e) : 1;
         for (int x = (int) Math.round(xlow - xlow % xstep); x <= xhigh; x += xstep) {
@@ -151,6 +150,26 @@ public class Plot {
         }
 
         g.dispose();
+        return img;
+    }
+
+    /**
+     * Display histogram on screen
+     *
+     * @param width display width (in pixels)
+     * @param height display height (in pixels)
+     * @param margin display margins (in pixels)
+     */
+    public void show(int width, int height, int margin) {
+        bim = new Bimage(create(width, height, margin));
         Display.draw(bim);
+    }
+
+    public void save(java.io.File file) {
+        try {
+            bim.write(file);
+        } catch (IOException ex) {
+           Messages.severe(ex.getMessage());
+        }
     }
 }
