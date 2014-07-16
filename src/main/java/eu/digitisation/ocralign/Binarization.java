@@ -23,6 +23,7 @@ import eu.digitisation.math.Counter;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 
 /**
@@ -31,7 +32,7 @@ import java.util.Collections;
  */
 public class Binarization {
 
-    public static void histogram(Bimage bim, File ofile) {
+    public static void histogram(Bimage bim, File ofile) throws IOException {
         int total = 0;
         int dark = 0;
         Counter<Integer> counter = new Counter<>();
@@ -65,7 +66,7 @@ public class Binarization {
 
         Plot plot = new Plot("Luminiscence", X, Y);
         plot.show(600, 400, 60);
-        plot.save(ofile);     
+        plot.save(ofile, 600, 400, 60);     
     }
 
 }
