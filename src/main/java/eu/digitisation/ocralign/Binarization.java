@@ -37,14 +37,15 @@ public class Binarization {
         Counter<Integer> counter = new Counter<>();
         Point box = new Point(bim.getWidth(), bim.getHeight());
         for (Point p : bim) {
-            //System.out.println(p + " " + box);
             Color c = bim.color(p.x, p.y);
-            int average = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+            int average = c.getRed();//(c.getRed() + c.getGreen() + c.getBlue()) / 3;
             counter.inc(average);
             ++total;
             if (average < 150) {
                 ++dark;
+                System.out.println(p.toString() + " " + average);
             }
+
         }
         System.out.println("dark=" + (100.0 * dark) / total);
 
@@ -55,18 +56,16 @@ public class Binarization {
         for (int n = 0; n < size; ++n) {
             X[n] = n;
             if (counter.value(n) > 0) {
-                //System.err.println(n + " " + Math.log(counter.value(n)));
-                Y[n] = //counter.value(n);
-                        Math.log(counter.value(n));
+                Y[n] = counter.value(n);//Math.log(counter.value(n));
             } else {
                 Y[n] = 0;
             }
+            System.err.println(n + " " + Y[n]);
         }
 
         Plot plot = new Plot("Luminiscence", X, Y);
         plot.show(600, 400, 60);
-        plot.save(ofile);
-        
+        plot.save(ofile);     
     }
 
 }
