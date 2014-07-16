@@ -22,6 +22,7 @@ import eu.digitisation.images.Bimage;
 import eu.digitisation.math.Counter;
 import java.awt.Color;
 import java.awt.Point;
+import java.io.File;
 import java.util.Collections;
 
 /**
@@ -30,7 +31,7 @@ import java.util.Collections;
  */
 public class Binarization {
 
-    public static void histogram(Bimage bim) {
+    public static void histogram(Bimage bim, File ofile) {
         int total = 0;
         int dark = 0;
         Counter<Integer> counter = new Counter<>();
@@ -55,7 +56,8 @@ public class Binarization {
             X[n] = n;
             if (counter.value(n) > 0) {
                 //System.err.println(n + " " + Math.log(counter.value(n)));
-                Y[n] = counter.value(n);//Math.log(counter.value(n));
+                Y[n] = //counter.value(n);
+                        Math.log(counter.value(n));
             } else {
                 Y[n] = 0;
             }
@@ -63,6 +65,8 @@ public class Binarization {
 
         Plot plot = new Plot("Luminiscence", X, Y);
         plot.show(600, 400, 60);
+        plot.save(ofile);
+        
     }
 
 }

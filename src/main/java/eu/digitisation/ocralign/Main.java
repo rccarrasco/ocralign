@@ -17,9 +17,7 @@
  */
 package eu.digitisation.ocralign;
 
-import eu.digitisation.image.Display;
 import eu.digitisation.images.Bimage;
-import eu.digitisation.math.Histogram;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,6 +32,8 @@ public class Main {
             System.out.println("Usage: image_file angle");
         } else {
             File imfile = new File(args[0]);
+            File hfile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_hplot.$2"));
+            File lfile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_lplot.$2"));
             //double alpha = Math.PI * Double.parseDouble(args[1]) / 180;
             Bimage bim = new Bimage(imfile);
             /*
@@ -42,7 +42,7 @@ public class Main {
              System.out.println(n + " " + p[n]);
              }
              File gtfile = new File(args[1]);
-             File ofile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_marked.$2"));
+            
              Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
              plot.write(ofile);
              System.out.println("Output dumped to " + ofile.getAbsolutePath());
@@ -56,16 +56,17 @@ public class Main {
 
             for (int n = 0; n < Y.length; ++n) {
                 X[n] = n;
-		//System.out.println(n + " " + Y[n]);
+                //System.out.println(n + " " + Y[n]);
             }
-            
-            Binarization.histogram(bim);
-            
+            //System.err.println("Output image in " + ofile);
+
+            Binarization.histogram(bim, lfile);
+
             Plot hplot = new Plot("H-projection", X, Y);
             hplot.show(800, 400, 20);
+            hplot.save(lfile);
             //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
             //rotated.write(ofile);
-            //System.err.println("Output image in " + ofile);
             //Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
         }
     }
