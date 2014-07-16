@@ -109,6 +109,10 @@ public class Plot {
         double ylow = Arrays.min(Y);
         double yrange = yhigh - ylow;
 
+        // white background
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width + 2 * margin, height + 2 * margin);
+        
         // draw lines
         g.setColor(Color.BLUE);
         int xprev = (int) Math.round((width * (X[0] - xlow)) / xrange);

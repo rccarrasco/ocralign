@@ -64,7 +64,7 @@ public class Main {
 
             Plot hplot = new Plot("H-projection", X, Y);
             hplot.show(800, 400, 20);
-            hplot.save(lfile, 800, 400, 20);
+            hplot.save(hfile, 800, 400, 20);
             //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
             //rotated.write(ofile);
             //Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
