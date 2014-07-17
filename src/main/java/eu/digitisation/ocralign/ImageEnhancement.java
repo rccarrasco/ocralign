@@ -180,15 +180,15 @@ public class ImageEnhancement {
     public static Bimage binary(Bimage bim, int threshold) {
         int width = bim.getWidth();
         int height = bim.getHeight();
-        int black = Color.BLACK.getRGB();
-        int white = Color.WHITE.getRGB();
-        Bimage binary = new Bimage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        int whiteRGB = Color.WHITE.getRGB();
+        Bimage binary = new Bimage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+        
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
                 if (bim.luminance(x, y) > threshold) {
-                    binary.setRGB(x, y, white);
+                    binary.setRGB(x, y, whiteRGB);
                 } else {
-                    binary.setRGB(x, y, black);
+                    binary.setRGB(x, y, 0);
                 }
             }
         }
@@ -201,8 +201,10 @@ public class ImageEnhancement {
      */
     public static Bimage binarise(Bimage bim) {
         Histogram hist = luminanceHistogram(bim);
-        int threshold = (int) (hist.average() - 1.5 * hist.std());
-
+        double high = hist.average();
+        double low  = hist.mode(0, (int) (int) (hist.average() - 1.5 * hist.std())); 
+        int threshold = (int) ((low + high)/2);
+        
         return binary(bim, threshold);
     }
 

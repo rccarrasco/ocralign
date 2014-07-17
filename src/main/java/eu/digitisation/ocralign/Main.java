@@ -47,7 +47,7 @@ public class Main {
 
     
             // binarization
-            ImageEnhancement.showHistogram(bim, lfile);
+            //ImageEnhancement.showHistogram(bim, lfile);
             Bimage binary = ImageEnhancement.binarise(bim);
             binary.write(outfile);
             
@@ -61,7 +61,7 @@ public class Main {
               }
              
             Plot hplot = new Plot("H-projection", X, Y);
-            hplot.show(800, 400, 20);
+            //hplot.show(800, 400, 20);
             hplot.save(hfile, 800, 400, 20);
         }
     }
