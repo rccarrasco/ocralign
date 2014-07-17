@@ -59,8 +59,8 @@ public class Transform {
      * @return the rotated image
      */
     public static Bimage rotate(Bimage bim, double alpha) {
-        double cos = Math.cos(alpha);
-        double sin = Math.sin(alpha);
+        double cos = Math.abs(Math.cos(alpha));
+        double sin = Math.abs(Math.sin(alpha));
         int w = (int) Math.floor(bim.getWidth() * cos + bim.getHeight() * sin);
         int h = (int) Math.floor(bim.getHeight() * cos + bim.getWidth() * sin);
         Bimage rotated = new Bimage(w, h, bim.getType());

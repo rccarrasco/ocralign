@@ -72,13 +72,13 @@ public class ImageEnhancement {
      *
      * @param bim the input image
      * @param alpha the line angle (alpha > 0 if growing, alpha < 0 if
-     * declining)
+     * declining). Absolute value must be pi/2 at most.
      *
      * @return the horizontal projection of darkness when points (x,y) are
      * rotated to (x',y') Since y-values are indeed negative (x=0, y=0
      * represents the upper-left corner in the picture), the transformation is
-     * not the standard but the following: x' = x * cos(alpha) + y * sin(alpha)
-     * y' = -x * sin(alpha) + y * cos(alpha)
+     * not the standard but the following (as if alpha was negative): x' = x *
+     * cos(alpha) + y * sin(alpha) y' = -x * sin(alpha) + y * cos(alpha)
      */
     public static int[] projection(Bimage bim, double alpha) {
         // highest point is either (0,0) or upper-right corner (width, 0)
@@ -182,7 +182,7 @@ public class ImageEnhancement {
         int height = bim.getHeight();
         int whiteRGB = Color.WHITE.getRGB();
         Bimage binary = new Bimage(width, height, BufferedImage.TYPE_BYTE_BINARY);
-        
+
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
                 if (bim.luminance(x, y) > threshold) {
@@ -202,9 +202,9 @@ public class ImageEnhancement {
     public static Bimage binarise(Bimage bim) {
         Histogram hist = luminanceHistogram(bim);
         double high = hist.average();
-        double low  = hist.mode(0, (int) (int) (hist.average() - 1.5 * hist.std())); 
-        int threshold = (int) ((low + high)/2);
-        
+        double low = hist.mode(0, (int) (int) (hist.average() - 1.5 * hist.std()));
+        int threshold = (int) ((low + high) / 2);
+
         return binary(bim, threshold);
     }
 
@@ -249,7 +249,7 @@ public class ImageEnhancement {
 
         double alpha = ImageEnhancement.skew(bim);
         System.out.println("Image rotation=" + alpha);
-        Bimage output = Transform.rotate(bim, -alpha);
+        Bimage output = Transform.rotate(bim, alpha);
         //output.slice();
         output.write(ofile);
         System.err.println("Output image in " + ofname);

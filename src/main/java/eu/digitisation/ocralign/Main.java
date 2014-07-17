@@ -29,7 +29,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
-            System.out.println("Usage: image_file angle");
+            System.out.println("Usage: image_file");
         } else {
             // Input
             File imgfile = new File(args[0]);
@@ -44,22 +44,23 @@ public class Main {
             // Deskew
             double alpha = 180 * ImageEnhancement.skew(bim) / Math.PI;
             System.err.println("Image rotation = " + alpha + " degrees");
-
-    
+            //Bimage rotated = Transform.rotate(bim, alpha);
+            //rotated.write(new File("rotated.tif"));
+            
             // binarization
             //ImageEnhancement.showHistogram(bim, lfile);
             Bimage binary = ImageEnhancement.binarise(bim);
             binary.write(outfile);
-            
+
             // Lines
-              double[] Y = LineSplit.smoothProjection(bim); 
-              double[] X = new double[Y.length];
-             
-              for (int n = 0; n < Y.length; ++n) { 
-                  X[n] = n;
-              //System.out.println(n + " " + Y[n]); 
-              }
-             
+            double[] Y = LineSplit.smoothProjection(bim);
+            double[] X = new double[Y.length];
+
+            for (int n = 0; n < Y.length; ++n) {
+                X[n] = n;
+                //System.out.println(n + " " + Y[n]); 
+            }
+
             Plot hplot = new Plot("H-projection", X, Y);
             //hplot.show(800, 400, 20);
             hplot.save(hfile, 800, 400, 20);
