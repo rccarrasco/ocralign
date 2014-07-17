@@ -20,7 +20,6 @@ package eu.digitisation.ocralign;
 
 import eu.digitisation.images.Bimage;
 import eu.digitisation.math.Counter;
-import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
@@ -32,41 +31,122 @@ import java.util.Collections;
  */
 public class Binarization {
 
-    public static void histogram(Bimage bim, File ofile) throws IOException {
-        int total = 0;
-        int dark = 0;
-        Counter<Integer> counter = new Counter<>();
-        Point box = new Point(bim.getWidth(), bim.getHeight());
-        for (Point p : bim) {
-            Color c = bim.color(p.x, p.y);
-            int average = c.getRed();//(c.getRed() + c.getGreen() + c.getBlue()) / 3;
-            counter.inc(average);
-            ++total;
-            if (average < 150) {
-                ++dark;
-                System.out.println(p.toString() + " " + average);
-            }
+    /**
+     *
+     * @param hist a histogram of integers
+     * @return average value of the integers
+     */
+    protected static double average(Counter<Integer> hist) {
+        int tot = 0;
+        int sum = 0;
 
+        for (Integer n : hist.keySet()) {
+            int val = hist.value(n);
+            sum += n * val;
+            tot += val;
         }
-        System.out.println("dark=" + (100.0 * dark) / total);
 
-        int size = 1 + Collections.max(counter.keySet());
+        return sum / (double) tot;
+    }
+
+    /**
+     *
+     * @param hist a histogram of integers
+     * @return the standard deviation value of the integers
+     */
+    protected static double std(Counter<Integer> hist) {
+        int tot = 0;
+        double mu = average(hist);
+        double sum = 0;
+
+        for (Integer n : hist.keySet()) {
+            int val = hist.value(n);
+            sum += (n - mu) * (n - mu) * val;
+            tot += val;
+        }
+
+        return Math.sqrt(sum / tot);
+    }
+
+    /**
+     *
+     * @param hist a histogram of integers
+     * @param low low end of range (inclusive)
+     * @param high high end of range (exclusive)
+     *
+     * @return the mode (most frequent key) in this range
+     */
+    protected static Integer mode(Counter<Integer> hist, int low, int high) {
+        Integer mode = null;
+
+        for (int n = low; n < high; ++n) {
+            int val = hist.value(n);
+            if (mode == null || val > hist.value(mode)) {
+                mode = n;
+            }
+        }
+        return mode;
+    }
+
+    protected static int percentile(Counter<Integer> hist, double threshold) {
+        int total = 0;
+
+        for (Integer val : hist.values()) {
+            total += val;
+        }
+
+        // keys are sorted (fortuantely)
+        int partial = 0;
+        for (Integer n : hist.keySet()) {
+            partial += hist.value(n);
+            if (partial > total * threshold) {
+                return n;
+            }
+        }
+
+        return hist.lastKey();
+    }
+
+    private static Counter<Integer> luminanceHistogram(Bimage bim) {
+        Counter<Integer> hist = new Counter<>();
+
+        for (Point p : bim) {
+            int lumin = bim.luminance(p.x, p.y);
+            hist.inc(lumin);
+        }
+        return hist;
+    }
+
+    public static void showHistogram(Bimage bim, File ofile) throws IOException {
+        Counter<Integer> hist = luminanceHistogram(bim);
+        int high = (int) (average(hist) - 1.5 * std(hist));
+        int second = mode(hist, 0, high);
+
+        System.out.println("mu=" + average(hist));
+        System.out.println("std=" + std(hist));
+        System.out.println("decile=" + percentile(hist, 0.1));
+        System.out.println("left max=" + second);
+
+        int size = 1 + Collections.max(hist.keySet());
         double[] X = new double[size];
         double[] Y = new double[size];
 
-        for (int n = 0; n < size; ++n) {
+        for (int n = 0;
+                n < size;
+                ++n) {
             X[n] = n;
-            if (counter.value(n) > 0) {
-                Y[n] = counter.value(n);//Math.log(counter.value(n));
+            if (hist.value(n) > 0) {
+                Y[n] = hist.value(n);//Math.log(counter.value(n));
             } else {
                 Y[n] = 0;
             }
-            System.err.println(n + " " + Y[n]);
+//            System.err.println(n + " " + Y[n]);
         }
 
         Plot plot = new Plot("Luminiscence", X, Y);
+
         plot.show(600, 400, 60);
-        plot.save(ofile, 600, 400, 60);     
+        plot.save(ofile, 600, 400, 60);
     }
 
 }

@@ -60,7 +60,7 @@ public class Main {
             }
             //System.err.println("Output image in " + ofile);
 
-            Binarization.histogram(bim, lfile);
+            Binarization.showHistogram(bim, lfile);
 
             Plot hplot = new Plot("H-projection", X, Y);
             hplot.show(800, 400, 20);

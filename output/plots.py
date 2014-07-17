@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import math
 
 def plot(num, name, xlab, ylab):
     fig = plt.figure(num)
@@ -7,8 +8,10 @@ def plot(num, name, xlab, ylab):
     Y = []
     for line in ifile:
         tokens = line.split()
-        X.append(tokens[0])
-        Y.append(tokens[1])
+        x = float(tokens[0])
+        y = float(tokens[1])
+        X.append(x)
+        Y.append(y)
 
     plt.xlabel(xlab)
     plt.ylabel(ylab)
@@ -19,4 +22,6 @@ def plot(num, name, xlab, ylab):
 
 plot(1, 'skew', 'angle (degrees)', 'sharpness')
 plot(2, 'lines', 'height', 'darkness')
+#plot(3, 'histo', 'lumin', 'num')
+
 raw_input()
