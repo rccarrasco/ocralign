@@ -20,7 +20,12 @@ package eu.digitisation.ocralign;
 import eu.digitisation.images.Bimage;
 import eu.digitisation.images.Display;
 import eu.digitisation.math.Arrays;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  *
@@ -29,7 +34,7 @@ import java.io.File;
  * @author R.C.C.
  * @version 20131110
  */
-public class Enhancement { //extends Bimage {
+public class ImageEnhancement {
 
     /**
      * For debugging: print vertical projection of gray levels
@@ -81,10 +86,10 @@ public class Enhancement { //extends Bimage {
                 ? 0
                 : (int) Math.round(-Math.sin(alpha) * bim.getWidth());
         // lowest point eihter (0, height) or (width, height)
-        int ymax = (alpha < 0) 
+        int ymax = (alpha < 0)
                 ? (int) Math.round(-Math.sin(alpha) * bim.getWidth() + Math.cos(alpha) * bim.getHeight())
                 : (int) Math.round(Math.cos(alpha) * bim.getHeight());
-        
+
         //System.out.println(ymin + " " + ymax);
         int[] values = new int[ymax - ymin + 1];
         for (int y = 0; y < bim.getHeight(); ++y) {
@@ -155,6 +160,84 @@ public class Enhancement { //extends Bimage {
         return skew;
     }
 
+    private static Histogram luminanceHistogram(Bimage bim) {
+        Histogram hist = new Histogram();
+
+        for (Point p : bim) {
+            int lumin = bim.luminance(p.x, p.y);
+            hist.inc(lumin);
+        }
+        return hist;
+    }
+
+    /**
+     *
+     * @param bim the input image
+     * @param threshold the value (between 0 and 255) splitting black and white
+     * pixels
+     * @return a binarised (black and white) version of the image
+     */
+    public static Bimage binary(Bimage bim, int threshold) {
+        int width = bim.getWidth();
+        int height = bim.getHeight();
+        int black = Color.BLACK.getRGB();
+        int white = Color.WHITE.getRGB();
+        Bimage binary = new Bimage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                if (bim.luminance(x, y) > threshold) {
+                    binary.setRGB(x, y, white);
+                } else {
+                    binary.setRGB(x, y, black);
+                }
+            }
+        }
+        return binary;
+    }
+
+    /**
+     * @param bim the input image
+     * @return a binarised (black and white) version of the image
+     */
+    public static Bimage binarise(Bimage bim) {
+        Histogram hist = luminanceHistogram(bim);
+        int threshold = (int) (hist.average() - 1.5 * hist.std());
+
+        return binary(bim, threshold);
+    }
+
+    public static void showHistogram(Bimage bim, File ofile) throws IOException {
+        Histogram hist = luminanceHistogram(bim);
+        int high = (int) (hist.average() - 1.5 * hist.std());
+        int second = hist.mode(0, high);
+
+        System.out.println("mu=" + hist.average());
+        System.out.println("std=" + hist.std());
+        System.out.println("decile=" + hist.percentile(0.1));
+        System.out.println("left max=" + second);
+
+        int size = 1 + Collections.max(hist.keySet());
+        double[] X = new double[size];
+        double[] Y = new double[size];
+
+        for (int n = 0;
+                n < size;
+                ++n) {
+            X[n] = n;
+            if (hist.value(n) > 0) {
+                Y[n] = hist.value(n);//Math.log(counter.value(n));
+            } else {
+                Y[n] = 0;
+            }
+//            System.err.println(n + " " + Y[n]);
+        }
+
+        Plot plot = new Plot("Luminiscence", X, Y);
+
+        plot.show(600, 400, 60);
+        plot.save(ofile, 600, 400, 60);
+    }
+
     public static void main(String[] args) throws Exception {
         String ifname = args[0];
         String ofname = args[1];
@@ -162,7 +245,7 @@ public class Enhancement { //extends Bimage {
         File ofile = new File(ofname);
         Bimage bim = new Bimage(ifile);
 
-        double alpha = Enhancement.skew(bim);
+        double alpha = ImageEnhancement.skew(bim);
         System.out.println("Image rotation=" + alpha);
         Bimage output = Transform.rotate(bim, -alpha);
         //output.slice();

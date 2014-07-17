@@ -31,43 +31,38 @@ public class Main {
         if (args.length == 0) {
             System.out.println("Usage: image_file angle");
         } else {
-            File imfile = new File(args[0]);
-            File hfile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_hplot.$2"));
-            File lfile = new File(imfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_lplot.$2"));
-            //double alpha = Math.PI * Double.parseDouble(args[1]) / 180;
-            Bimage bim = new Bimage(imfile);
-            /*
-             int[] p = Enhancement.projection(bim, alpha);
-             for (int n = 0; n < p.length; ++n) {
-             System.out.println(n + " " + p[n]);
-             }
-             File gtfile = new File(args[1]);
-            
-             Bimage plot = Layout.plot(imfile, gtfile, ComponentType.BLOCK, Color.RED, 2f);
-             plot.write(ofile);
-             System.out.println("Output dumped to " + ofile.getAbsolutePath());
-             */
-            double alpha = 180 * Enhancement.skew(bim) / Math.PI;
-            //double alpha2 = 180 * Enhancement.skew2(bim) / Math.PI;
+            // Input
+            File imgfile = new File(args[0]);
+            Bimage bim = new Bimage(imgfile);
+
+            // outputs
+            File hfile = new File(imgfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_hplot.$2"));
+            File lfile = new File(imgfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_lplot.$2"));
+            File outfile = new File(imgfile.getAbsolutePath().replaceAll("^(.*)\\.(.*)$", "$1_out.$2"));
+            System.err.println("Output image in " + outfile);
+
+            // Deskew
+            double alpha = 180 * ImageEnhancement.skew(bim) / Math.PI;
             System.err.println("Image rotation = " + alpha + " degrees");
-            //System.err.println("Image rotation = " + alpha2 + " degrees");
-            double[] Y = LineSplit.smoothProjection(bim);
-            double[] X = new double[Y.length];
 
-            for (int n = 0; n < Y.length; ++n) {
-                X[n] = n;
-                //System.out.println(n + " " + Y[n]);
-            }
-            //System.err.println("Output image in " + ofile);
-
-            Binarization.showHistogram(bim, lfile);
-
+    
+            // binarization
+            ImageEnhancement.showHistogram(bim, lfile);
+            Bimage binary = ImageEnhancement.binarise(bim);
+            binary.write(outfile);
+            
+            // Lines
+              double[] Y = LineSplit.smoothProjection(bim); 
+              double[] X = new double[Y.length];
+             
+              for (int n = 0; n < Y.length; ++n) { 
+                  X[n] = n;
+              //System.out.println(n + " " + Y[n]); 
+              }
+             
             Plot hplot = new Plot("H-projection", X, Y);
             hplot.show(800, 400, 20);
             hplot.save(hfile, 800, 400, 20);
-            //Bimage rotated = Transform.rotate(bim, 5 * Math.PI / 180);
-            //rotated.write(ofile);
-            //Display.draw(rotated, rotated.getWidth(), rotated.getHeight());
         }
     }
 }

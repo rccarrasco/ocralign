@@ -25,6 +25,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -96,7 +97,7 @@ public class Bimage extends BufferedImage implements Iterable<Point> {
      * @throws IOException
      * @throws NullPointerException if the file format is unsupported
      */
-    public Bimage(java.io.File file) throws IOException {
+    public Bimage(File file) throws IOException {
         //            this(javax.imageio.ImageIO.read(file));
         this(JAI.create("FileLoad",
                 file.getCanonicalPath()).getAsBufferedImage());
@@ -233,7 +234,7 @@ public class Bimage extends BufferedImage implements Iterable<Point> {
      * @param file the output file
      * @throws java.io.IOException
      */
-    public void write(java.io.File file)
+    public void write(File file)
             throws IOException {
         Format format = Format.valueOf(file);
         JAI.create("filestore", this,
