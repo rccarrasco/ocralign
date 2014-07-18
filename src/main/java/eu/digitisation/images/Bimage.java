@@ -316,6 +316,11 @@ public class Bimage extends BufferedImage implements Iterable<Point> {
                 }
                 return new Point(x, y);
             }
+            
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
 
         };
 
